@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>tiff.js demo</title>
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="../tiff.min.js"></script>
+    <script type="text/javascript">
+$(function () {
+  var imageFiles = [ '4838.tiff' ];
+
+  var loadImage = function (filename) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', filename);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function (e) {
+      var buffer = xhr.response;
+      var canvas = new Tiff(buffer).toCanvas();
+      if (canvas) {
+        var $elem = $('<div><div><a href="' + filename + '">' + filename + '</a></div></div>');
+        $elem.append(canvas);
+        $('body').append($elem);
+      }
+    };
+    xhr.send();
+  };
+
+  for (var i = 0, len = imageFiles.length; i < len; ++i) {
+    loadImage('images/' + imageFiles[i]);
+  }
+});
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+*** libtiff/tif_open.c	2010-12-09 10:48:54.000000000 +0900
+--- libtiff.mod/tif_open.c	2013-10-03 00:20:30.052579176 +0900
+***************
+*** 98,104 ****
+  	assert(sizeof(int32)==4);
+  	assert(sizeof(uint64)==8);
+  	assert(sizeof(int64)==8);
+! 	assert(sizeof(tmsize_t)==sizeof(void*));
+  	{
+  		union{
+  			uint8 a8[2];
+--- 98,104 ----
+  	assert(sizeof(int32)==4);
+  	assert(sizeof(uint64)==8);
+  	assert(sizeof(int64)==8);
+! 	/* assert(sizeof(tmsize_t)==sizeof(void*)); */
+  	{
+  		union{
+  			uint8 a8[2];

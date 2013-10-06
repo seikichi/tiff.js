@@ -1,0 +1,7 @@
+*~
+*.map
+a.out.*
+
+tiff-*
+zlib-*
+*.o
