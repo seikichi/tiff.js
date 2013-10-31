@@ -1,7 +1,7 @@
 # tiff.js
 tiff.js is a port of LibTIFF by compiling the LibTIFF C code with Emscripten.
 
-See [demo](http://moon.kmc.gr.jp/~seikichi/tiffjs/1.html).
+See [demo](http://seikichi.github.io/tiff.js/1.html).
 
 ## Usage
 Use tiff.min.js:
