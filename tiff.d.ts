@@ -8,7 +8,7 @@ declare class Tiff {
     public width(): number;
     public height(): number;
     public currentDirectory(): number;
-    public lastDirectory(): number;
+    public countDirectory(): number;
     public setDirectory(index: number): void;
     public getField(tag: number): number;
     public readRGBAImage(): ArrayBuffer;
@@ -16,7 +16,6 @@ declare class Tiff {
     public toDataURL(): string;
     public close(): void;
     private static createUniqueFileName();
-    private static createFileSystemObjectFromURL(url);
     private static createFileSystemObjectFromBuffer(buffer);
 }
 declare module Tiff {
@@ -24,8 +23,7 @@ declare module Tiff {
         TOTAL_MEMORY?: number;
     }
     interface Params {
-        url?: string;
-        buffer?: ArrayBuffer;
+        buffer: ArrayBuffer;
     }
     class Exception {
         public message: string;

@@ -12,17 +12,10 @@ class Tiff {
   }
 
   constructor(params: Tiff.Params) {
-    if (!params.url && !params.buffer) {
-      throw new Tiff.Exception('Invalid parameter, need either .buffer or .url');
-    }
     if (Tiff.Module === null) {
       Tiff.initialize({});
     }
-    if (params.url) {
-      this._filename = Tiff.createFileSystemObjectFromURL(params.url);
-    } else {
-      this._filename = Tiff.createFileSystemObjectFromBuffer(params.buffer);
-    }
+    this._filename = Tiff.createFileSystemObjectFromBuffer(params.buffer);
     this._tiffPtr = Tiff.Module.ccall('TIFFOpen', 'number', [
       'string', 'string'], [ this._filename, 'r']);
     if (this._tiffPtr === 0) {
@@ -43,9 +36,17 @@ class Tiff {
                              ['number'], [this._tiffPtr]);
   }
 
-  lastDirectory(): number {
-    return Tiff.Module.ccall('TIFFLastDirectory', 'number',
-                             ['number'], [this._tiffPtr]);
+  countDirectory(): number {
+    var count = 0;
+    var current = this.currentDirectory();
+    while (true) {
+      count += 1;
+      var status = Tiff.Module.ccall('TIFFReadDirectory', 'number',
+                                     ['number'], [this._tiffPtr]);
+      if (status === 0) { break; }
+    }
+    this.setDirectory(current);
+    return count;
   }
 
   setDirectory(index: number): void {
@@ -54,7 +55,7 @@ class Tiff {
   }
 
   getField(tag: number): number {
-    var value: number = Module.ccall('GetField', 'number', ['number', 'number'], [
+    var value: number = Tiff.Module.ccall('GetField', 'number', ['number', 'number'], [
       this._tiffPtr, tag]);
     return value;
   }
@@ -120,12 +121,6 @@ class Tiff {
     return String(Tiff.uniqueIdForFileName) + '.tiff';
   }
 
-  private static createFileSystemObjectFromURL(url: string): string {
-    var filename = Tiff.createUniqueFileName();
-    Tiff.Module.FS.createLazyFile('/', url, filename, true, false);
-    return filename;
-  }
-
   private static createFileSystemObjectFromBuffer(buffer: ArrayBuffer): string {
     var filename = Tiff.createUniqueFileName();
     Tiff.Module.FS.createDataFile('/', filename, new Uint8Array(buffer), true, false);
@@ -139,8 +134,7 @@ module Tiff {
   }
 
   export interface Params {
-    url?: string;
-    buffer?: ArrayBuffer;
+    buffer: ArrayBuffer;
   }
 
   export class Exception {
@@ -155,7 +149,7 @@ module Tiff {
 Tiff.prototype['width'] = Tiff.prototype.width;
 Tiff.prototype['height'] = Tiff.prototype.height;
 Tiff.prototype['currentDirectory'] = Tiff.prototype.currentDirectory;
-Tiff.prototype['lastDirectory'] = Tiff.prototype.lastDirectory;
+Tiff.prototype['countDirectory'] = Tiff.prototype.countDirectory;
 Tiff.prototype['setDirectory'] = Tiff.prototype.setDirectory;
 Tiff.prototype['getField'] = Tiff.prototype.getField;
 Tiff.prototype['readRGBAImage'] = Tiff.prototype.readRGBAImage;
