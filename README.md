@@ -11,12 +11,27 @@ Use tiff.min.js:
     xhr.open('GET', "tiff-image-url");
     xhr.onload = function (e) {
         var tiff = new Tiff({buffer: xhr.response});
-        console.log('width:', tiff.width());
-        console.log('height:', tiff.height());
+        var width = tiff.width());
+        var height = tiff.height());
+        console.log('width:', width);
+        console.log('height:', height);
         var arrayBuffer = tiff.readRGBAImage();
-        // Let's do something nice
+
+        var canvas = createCanvasFromArrayBuffer(arrayBuffer, width, height);
+        document.body.append(canvas);
     };
     xhr.send();
+
+    function createCanvasFromArrayBuffer(buffer, width, height) {
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        canvas.width = width;
+        canvas.height = height;
+        var imageData = context.createImageData(width, height);
+        imageData.data.set(new Uint8Array(buffer));
+        context.putImageData(imageData, 0, 0);
+        return canvas;
+    }
 
 ## Note
 - This library does not support JPEG-based compressed TIFF image files
