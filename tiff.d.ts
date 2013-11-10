@@ -1,7 +1,9 @@
 declare class Tiff {
-    private static uniqueIdForFileName;
     private _filename;
     private _tiffPtr;
+    private static uniqueIdForFileName;
+    private static Module;
+    static initialize(options: Tiff.InitializeOptions): void;
     constructor(params: Tiff.Params);
     public width(): number;
     public height(): number;
@@ -10,12 +12,17 @@ declare class Tiff {
     public setDirectory(index: number): void;
     public getField(tag: number): number;
     public readRGBAImage(): ArrayBuffer;
+    public toCanvas(): HTMLCanvasElement;
+    public toDataURL(): string;
     public close(): void;
     private static createUniqueFileName();
     private static createFileSystemObjectFromURL(url);
     private static createFileSystemObjectFromBuffer(buffer);
 }
 declare module Tiff {
+    interface InitializeOptions {
+        TOTAL_MEMORY?: number;
+    }
     interface Params {
         url?: string;
         buffer?: ArrayBuffer;

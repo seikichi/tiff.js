@@ -76,6 +76,11 @@
    LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
    OF THIS SOFTWARE.
 */
+var loadModule = function (options) {
+  var Module = {};
+  if ('TOTAL_MEMORY' in options) {
+    Module['TOTAL_MEMORY'] = options['TOTAL_MEMORY'];
+  }
 // Note: For maximum-speed code, see "Optimizing Code" on the Emscripten wiki, https://github.com/kripken/emscripten/wiki/Optimizing-Code
 // Note: Some Emscripten settings may limit the speed of the generated code.
 // The Module object: Our interface to the outside world. We import
@@ -7022,35 +7027,9 @@ if (Module['noInitialRun']) {
 run();
 // {{POST_RUN_ADDITIONS}}
 // {{MODULE_ADDITIONS}}
+  return Module;
+};
 
-var malloc = cwrap('malloc', 'number', ['number']);
-var free = cwrap('malloc', 'number', ['number']);
-
-var GetField = cwrap('GetField', 'number', ['number', 'number']);
-
-var TIFFOpen = cwrap('TIFFOpen', 'number', ['string', 'string']);
-var TIFFClose = cwrap('TIFFClose', 'number', ['number']);
-var TIFFGetField = cwrap('TIFFGetField', 'number', ['number', 'numner', 'number']);
-var TIFFReadRGBAImage = cwrap('TIFFReadRGBAImage', 'number', [
-    'number',
-    'number',
-    'number',
-    'number',
-    'number'
-]);
-var TIFFReadRGBAImageOriented = cwrap('TIFFReadRGBAImageOriented', 'number', [
-    'number',
-    'number',
-    'number',
-    'number',
-    'number',
-    'number'
-]);
-var TIFFSetDirectory = cwrap('TIFFSetDirectory', 'number', ['number', 'number']);
-var TIFFCurrentDirectory = cwrap('TIFFCurrentDirectory', 'number', ['number']);
-var TIFFLastDirectory = cwrap('TIFFLastDirectory', 'number', ['number']);
-var _TIFFmalloc = cwrap('_TIFFmalloc', 'number', ['number']);
-var _TIFFfree = cwrap('_TIFFfree', 'number', ['number']);
 var TiffTag = {
     SUBFILETYPE: 254,
     OSUBFILETYPE: 255,
@@ -7243,16 +7222,29 @@ var Tiff = (function () {
         if (!params.url && !params.buffer) {
             throw new Tiff.Exception('Invalid parameter, need either .buffer or .url');
         }
+        if (Tiff.Module === null) {
+            Tiff.initialize({});
+        }
         if (params.url) {
             this._filename = Tiff.createFileSystemObjectFromURL(params.url);
         } else {
             this._filename = Tiff.createFileSystemObjectFromBuffer(params.buffer);
         }
-        this._tiffPtr = TIFFOpen(this._filename, 'r');
+        this._tiffPtr = Tiff.Module.ccall('TIFFOpen', 'number', [
+            'string',
+            'string'
+        ], [this._filename, 'r']);
         if (this._tiffPtr === 0) {
             throw new Tiff.Exception('The function TIFFOpen returns NULL');
         }
     }
+    Tiff.initialize = function (options) {
+        if (Tiff.Module !== null) {
+            return;
+        }
+        Tiff.Module = loadModule(options);
+    };
+
     Tiff.prototype.width = function () {
         return this.getField(Tiff.Tag.IMAGEWIDTH);
     };
@@ -7262,37 +7254,97 @@ var Tiff = (function () {
     };
 
     Tiff.prototype.currentDirectory = function () {
-        return TIFFCurrentDirectory(this._tiffPtr);
+        return Tiff.Module.ccall('TIFFCurrentDirectory', 'number', ['number'], [this._tiffPtr]);
     };
 
     Tiff.prototype.lastDirectory = function () {
-        return TIFFLastDirectory(this._tiffPtr);
+        return Tiff.Module.ccall('TIFFLastDirectory', 'number', ['number'], [this._tiffPtr]);
     };
 
     Tiff.prototype.setDirectory = function (index) {
-        TIFFSetDirectory(this._tiffPtr, index);
+        return Tiff.Module.ccall('TIFFSetDirectory', 'number', ['number', 'number'], [this._tiffPtr, index]);
     };
 
     Tiff.prototype.getField = function (tag) {
-        var value = GetField(this._tiffPtr, tag);
+        var value = Module.ccall('GetField', 'number', ['number', 'number'], [
+            this._tiffPtr,
+            tag
+        ]);
         return value;
     };
 
     Tiff.prototype.readRGBAImage = function () {
         var width = this.width();
         var height = this.height();
-        var raster = _TIFFmalloc(width * height * 4);
-        var result = TIFFReadRGBAImageOriented(this._tiffPtr, width, height, raster, 1, 0);
+        var raster = Tiff.Module.ccall('_TIFFmalloc', 'number', ['number'], [width * height * 4]);
+        var result = Tiff.Module.ccall('TIFFReadRGBAImageOriented', 'number', [
+            'number',
+            'number',
+            'number',
+            'number',
+            'number',
+            'number'
+        ], [
+            this._tiffPtr,
+            width,
+            height,
+            raster,
+            1,
+            0
+        ]);
+
         if (result === 0) {
             throw new Tiff.Exception('The function TIFFReadRGBAImageOriented returns NULL');
         }
-        var data = (HEAP8.buffer).slice(raster, raster + width * height * 4);
-        _TIFFfree(raster);
+
+        // copy the subarray, not create new sub-view
+        var data = (Tiff.Module.HEAPU8.buffer).slice(raster, raster + width * height * 4);
+        Tiff.Module.ccall('free', 'number', ['number'], [raster]);
         return data;
     };
 
+    Tiff.prototype.toCanvas = function () {
+        var width = this.width();
+        var height = this.height();
+        var raster = Tiff.Module.ccall('_TIFFmalloc', 'number', ['number'], [width * height * 4]);
+        var result = Tiff.Module.ccall('TIFFReadRGBAImageOriented', 'number', [
+            'number',
+            'number',
+            'number',
+            'number',
+            'number',
+            'number'
+        ], [
+            this._tiffPtr,
+            width,
+            height,
+            raster,
+            1,
+            0
+        ]);
+
+        if (result === 0) {
+            throw new Tiff.Exception('The function TIFFReadRGBAImageOriented returns NULL');
+        }
+        var image = Tiff.Module.HEAPU8.subarray(raster, raster + width * height * 4);
+
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        canvas.width = width;
+        canvas.height = height;
+        var imageData = context.createImageData(width, height);
+        (imageData).data.set(image);
+        context.putImageData(imageData, 0, 0);
+        Tiff.Module.ccall('free', 'number', ['number'], [raster]);
+        return canvas;
+    };
+
+    Tiff.prototype.toDataURL = function () {
+        return this.toCanvas().toDataURL();
+    };
+
     Tiff.prototype.close = function () {
-        TIFFClose(this._tiffPtr);
+        Tiff.Module.ccall('TIFFClose', 'number', ['number'], [this._tiffPtr]);
     };
 
     Tiff.createUniqueFileName = function () {
@@ -7302,16 +7354,17 @@ var Tiff = (function () {
 
     Tiff.createFileSystemObjectFromURL = function (url) {
         var filename = Tiff.createUniqueFileName();
-        FS.createLazyFile('/', url, filename, true, false);
+        Tiff.Module.FS.createLazyFile('/', url, filename, true, false);
         return filename;
     };
 
     Tiff.createFileSystemObjectFromBuffer = function (buffer) {
         var filename = Tiff.createUniqueFileName();
-        FS.createDataFile('/', filename, new Uint8Array(buffer), true, false);
+        Tiff.Module.FS.createDataFile('/', filename, new Uint8Array(buffer), true, false);
         return filename;
     };
     Tiff.uniqueIdForFileName = 0;
+    Tiff.Module = null;
     return Tiff;
 })();
 
@@ -7339,6 +7392,7 @@ Tiff.prototype['getField'] = Tiff.prototype.getField;
 Tiff.prototype['readRGBAImage'] = Tiff.prototype.readRGBAImage;
 Tiff.prototype['close'] = Tiff.prototype.close;
 Tiff['Exception'] = Tiff.Exception;
+Tiff['initialize'] = Tiff.initialize;
 
 if (typeof process === 'object' && typeof require === 'function') {
     module['exports'] = Tiff;

@@ -5,7 +5,7 @@
   </head>
   <body>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="../tiff.min.js"></script>
+    <script src="../tiff.js"></script>
     <script type="text/javascript">
 $(function () {
   var imageFiles = [
@@ -27,16 +27,9 @@ $(function () {
     xhr.onload = function (e) {
       var buffer = xhr.response;
       var tiff = new Tiff({buffer: buffer});
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
+      var canvas = tiff.toCanvas();
       var width = tiff.width();
       var height = tiff.height();
-      canvas.width = width;
-      canvas.height = height;
-      var imageData = context.createImageData(width, height);
-      var image = new Uint8Array(tiff.readRGBAImage());
-      imageData.data.set(image);
-      context.putImageData(imageData, 0, 0);
       if (canvas) {
         var $elem = $('<div><div><a href="' + filename + '">' +
                       filename +

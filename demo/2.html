@@ -5,9 +5,10 @@
   </head>
   <body>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="../tiff.min.js"></script>
+    <script src="../tiff.js"></script>
     <script type="text/javascript">
 $(function () {
+  Tiff.initialize({ TOTAL_MEMORY: 16777216 * 30});
   var imageFiles = [ '4838.tiff' ];
 
   var loadImage = function (filename) {
@@ -16,9 +17,15 @@ $(function () {
     xhr.responseType = 'arraybuffer';
     xhr.onload = function (e) {
       var buffer = xhr.response;
-      var canvas = new Tiff(buffer).toCanvas();
+      var tiff = new Tiff({buffer: buffer});
+      var canvas = tiff.toCanvas();
+      var width = tiff.width();
+      var height = tiff.height();
       if (canvas) {
-        var $elem = $('<div><div><a href="' + filename + '">' + filename + '</a></div></div>');
+        var $elem = $('<div><div><a href="' + filename + '">' +
+                      filename +
+                      ' (width: ' + width + ', height:' + height + ')' +
+                      '</a></div></div>');
         $elem.append(canvas);
         $('body').append($elem);
       }
