@@ -14,6 +14,6 @@ fs.readFile(filename, function (err, data) {
   console.log('width:', tiff.width());
   console.log('height:', tiff.height());
   console.log('currentDirectory:', tiff.currentDirectory());
-  console.log('lastDirectory:', tiff.lastDirectory());
+  console.log('countDirectory:', tiff.countDirectory());
   tiff.close();
 });
