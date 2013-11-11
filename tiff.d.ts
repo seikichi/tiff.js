@@ -1,8 +1,4 @@
 declare class Tiff {
-    private _filename;
-    private _tiffPtr;
-    private static uniqueIdForFileName;
-    private static Module;
     static initialize(options: Tiff.InitializeOptions): void;
     constructor(params: Tiff.Params);
     public width(): number;
@@ -15,8 +11,6 @@ declare class Tiff {
     public toCanvas(): HTMLCanvasElement;
     public toDataURL(): string;
     public close(): void;
-    private static createUniqueFileName();
-    private static createFileSystemObjectFromBuffer(buffer);
 }
 declare module Tiff {
     interface InitializeOptions {
