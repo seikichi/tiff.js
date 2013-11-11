@@ -24,12 +24,12 @@ see tiff.d.ts
 
 ## Note
 - This library does not support JPEG-based compressed TIFF files
--- I failed to link a JPEG library ... ;-p
+  - I failed to link a JPEG library ... ;-p
 - When you load large tiff file, you will see the error message "Cannot enlarge memory arrays in asm.js"
--- in such case, please call 'Tiff.initialize({TOTAL_MEMORY: ... })' before you create a Tiff instance
+  - in such case, please call 'Tiff.initialize({TOTAL_MEMORY: ... })' before you create a Tiff instance
 - This JavaScript library uses only some parts of the LibTIFF features
--- To be more precise, I use following functions only
--- TIFFOpen, TIFFClose, TIFFGetField, TIFFReadRGBAImage, TIFFSetDirectory, TIFFCurrentDirectory, TIFFReadDirectory
+  - To be more precise, I use following functions only
+  - TIFFOpen, TIFFClose, TIFFGetField, TIFFReadRGBAImage, TIFFSetDirectory, TIFFCurrentDirectory, TIFFReadDirectory
     
 ## License
 The LibTIFF is LibTIFF Software License, zlib and additional code are zlib License.
