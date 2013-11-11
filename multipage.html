@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>tiff.js demo</title>
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="./tiff.min.js"></script>
+    <script type="text/javascript">
+$(function () {
+  Tiff.initialize({TOTAL_MEMORY: 16777216 * 10});
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'images/multipage.tiff');
+  xhr.responseType = 'arraybuffer';
+  xhr.onload = function (e) {
+    var buffer = xhr.response;
+    var tiff = new Tiff({buffer: buffer});
+    for (var i = 0, len = tiff.countDirectory(); i < len; ++i) {
+      tiff.setDirectory(i);
+      var canvas = tiff.toCanvas();
+      $('body').append(canvas);
+    }
+  };
+  xhr.send();
+});
+
+    </script>
+  </body>
+</html>

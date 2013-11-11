@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <title>tiff.js demo</title>
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript">
+$(function () {
+  var worker = new Worker('worker.js');
+  worker.onmessage = function (event) {
+    var data = event.data;
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    canvas.width = data.width;
+    canvas.height = data.height;
+    var imageData = context.createImageData(data.width, data.height);
+    (imageData).data.set(new Uint8Array(data.image));
+    context.putImageData(imageData, 0, 0);
+    document.body.appendChild(canvas);
+  };
+  worker.postMessage({url: 'images/palette-1c-8b.tiff', memory: 16777216});
+});
+    </script>
+  </body>
+</html>
