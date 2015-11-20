@@ -1,5 +1,6 @@
 {
   "name": "tiff.js",
+  "version": "1.0.0",
   "main": "tiff.min.js",
   "homepage": "https://github.com/siliconrhino/tiff.js",
   "authors": [
