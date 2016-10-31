@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <title>tiff.js demo</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>tiff.js demo</h1>
+      </div>
+      <div class="well">
+        <input type="file" id="file" name="files"/>
+        <div id="drop-zone">or drop an tiff image file here</div>
+      </div>
+      <div class="well">
+        <div><span id="time"></span>ms</div>
+        <div id="output"></div>
+      </div>
+    </div>
+
+    <style>
+      #drop-zone {
+      border: 2px dashed rgb(187, 187, 187);
+      border-radius: 5px 5px 5px 5px;
+      padding: 50px;
+      text-align: center;
+      color: rgb(87, 87, 87);
+      }
+
+      canvas {
+      max-width: 100%;
+      }
+    </style>
+    <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="./tiff.min.js"></script>
+    <script type="text/javascript">
+$(function () {
+  var dropzone = $('#drop-zone');
+  function show(file) {
+    var reader = new FileReader();
+    reader.onload = (function (theFile) {
+      return function (e) {
+        var buffer = e.target.result;
+        var tiff = new Tiff({buffer: buffer});
+        var canvas = tiff.toCanvas();
+        var width = tiff.width();
+        var height = tiff.height();
+        if (canvas) {
+          $('#output').empty().append(canvas);
+        }
+      };
+    })(file);
+    reader.readAsArrayBuffer(file);
+  }
+      
+  dropzone.on('dragover', function (jqEvent) {
+    var event = jqEvent.originalEvent;
+    event.stopPropagation();
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+  });
+
+  $('#file').on('change', function (event) {
+    show(event.target.files[0]);
+  });
+
+  dropzone.on('drop', function (jqEvent) {
+    var event = jqEvent.originalEvent;
+    event.stopPropagation();
+    event.preventDefault();
+    var files = event.dataTransfer.files
+    if (files.length === 0) { return; }
+    show(files[0]);
+  });
+});
+    </script>
+  </body>
+</html>
