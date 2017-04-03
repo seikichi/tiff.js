@@ -1,0 +1,14 @@
+{
+  "name": "tiff.js",
+  "description": "tiff.js is a port of the LibTIFF by compiling the LibTIFF C code with Emscripten.",
+  "version": "0.0.1",
+  "homepage": "https://github.com/seikichi/tiff.js",
+  "author": "seikichi",
+  "licenses": "SEE LICENSE IN LICENSE",
+  "repository": "github:seikichi/tiff.js",
+  "bugs": {
+    "url": "https://github.com/seikichi/tiff.js/issues"
+  },  
+  "main": "tiff",
+  "keywords": ["tiff", "image", "conversion"]
+}
