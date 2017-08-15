@@ -4,9 +4,10 @@ tiff.js is a port of the LibTIFF by compiling the LibTIFF C code with Emscripten
 
 ## [Demo](http://seikichi.github.io/tiff.js/)
 
-- [views TIFF files](http://seikichi.github.io/tiff.js/basic.html)
-- [views a TIFF file using a web worker](http://seikichi.github.io/tiff.js/worker.html)
-- [views a multipage TIFF file](http://seikichi.github.io/tiff.js/multipage.html)
+- [view TIFF files](http://seikichi.github.io/tiff.js/basic.html)
+- [view a TIFF file using a web worker](http://seikichi.github.io/tiff.js/worker.html)
+- [view a multipage TIFF file](http://seikichi.github.io/tiff.js/multipage.html)
+- [view your TIFF file](http://seikichi.github.io/tiff.js/upload.html)
 
 ## Usage
 
@@ -51,8 +52,8 @@ see tiff.d.ts
 
 ## Note
 
-- This library does not support JPEG-based compressed TIFF files
-  - I failed to link a JPEG library ... ;-p
+- ~~This library does not support JPEG-based compressed TIFF files~~
+  - Fixed by [Tetedeiench](https://github.com/seikichi/tiff.js/issues/15#issuecomment-257103842)
 - When you load large tiff file, you will see the error message "Cannot enlarge memory arrays in asm.js"
   - in such case, please call 'Tiff.initialize({TOTAL_MEMORY: ... })' before you create a Tiff instance
 - This JavaScript library uses only some parts of the LibTIFF features
