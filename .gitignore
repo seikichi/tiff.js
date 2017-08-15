@@ -10,3 +10,5 @@ zlib-*
 
 tiff.raw.js
 tiff_tag.*
+
+node_modules/
