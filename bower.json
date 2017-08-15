@@ -1,0 +1,23 @@
+{
+  "name": "tiff.js",
+  "version": "1.0.0",
+  "main": "tiff.min.js",
+  "homepage": "https://github.com/siliconrhino/tiff.js",
+  "authors": [
+    "Seiichi Kondo"
+  ],
+  "description": "tiff.js is a port of the LibTIFF by compiling the LibTIFF C code with Emscripten",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "tiff",
+    "LibTIFF"
+  ],
+  "license": "zlib",
+  "ignore": [
+    "*",
+    "!tiff.min.js",
+    "!tiff.js"
+  ]
+}
