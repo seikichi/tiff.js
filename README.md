@@ -60,6 +60,11 @@ see tiff.d.ts
   - To be more precise, I use following functions only
   - TIFFOpen, TIFFClose, TIFFGetField, TIFFReadRGBAImage, TIFFSetDirectory, TIFFCurrentDirectory, TIFFReadDirectory
 
+## Alternatives
+
+- [photopea/UTIF.js](https://github.com/photopea/UTIF.js)
+- [image-js/tiff](https://github.com/image-js/tiff)
+
 ## License
 
 The LibTIFF is LibTIFF Software License, zlib and additional code are zlib License.
