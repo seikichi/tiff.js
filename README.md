@@ -10,7 +10,9 @@ tiff.js is a port of the LibTIFF by compiling the LibTIFF C code with Emscripten
 
 ## Usage
 
-Use tiff.min.js:
+### Browser
+
+Download tiff.min.js and load the script by yourself:
 
 ```js
 var xhr = new XMLHttpRequest();
@@ -22,6 +24,25 @@ xhr.onload = function (e) {
   document.body.append(canvas);
 };
 xhr.send();
+```
+
+### Node.js
+
+```sh
+$ npm install tiff.js
+```
+
+Example
+
+```js
+// Usage: node this-file.js input.tiff
+var Tiff = require('tiff.js');
+var fs = require('fs');
+
+var filename = process.argv[2];
+var input = fs.readFileSync(filename);
+var image = new Tiff({ buffer: input });
+console.log(filename + ': width = ' + image.width() + ', height = ' + image.height());
 ```
 
 ## API
