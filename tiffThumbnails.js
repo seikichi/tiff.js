@@ -1,7 +1,7 @@
 /**
- * Find all img elements with data-pdf-thumbnail-file attribute,
- * then load pdf file given in the attribute,
- * then use pdf.js to draw the first page on a canvas,
+ * Find all img elements with data-tiff-thumbnail-file attribute,
+ * then load tiff file given in the attribute,
+ * then use tiff.js to draw the first page on a canvas,
  * then convert it to base64,
  * then set it as the img src.
  */
