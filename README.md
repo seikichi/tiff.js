@@ -70,7 +70,7 @@ You just need to keep the `tiffThumbnails.js` file from this project, and the `t
 ```
 To show a thumbnail, write an `img` element with a `data-tiff-thumbnail-file` attribute:
 ```html
-<img data-pdf-thumbnail-file="/my/load.png">
+<img data-tiff-thumbnail-file="/my/load.png">
 ``` 
 
 ## Alternatives
