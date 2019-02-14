@@ -30,14 +30,15 @@ xhr.send();
 ## Use it in your own project simply
 
 You just need to keep the `tiffThumbnails.js` and the `tiff.js` files from this project, 
-(let them both in the same directory as tiff.js will try to load the worker). In your html file, include the javascripts:
+(let them both in the same directory as tiff.js will try to load the worker).  In your html file, include the javascripts:
+If you are also adding the "load.gif" file, more beautiful view happen while creating tiff.
 ```html
 <script src="/path/to/tiff.js"></script>
 <script src="/path/to/tiffThumbnails.js"></script>
 ```
 To show a thumbnail, write an `img` element with a `data-tiff-thumbnail-file` attribute:
 ```html
-<img data-tiff-thumbnail-file="/my/load.png">
+<img data-tiff-thumbnail-file="/my/load.gif">
 ``` 
 
 
