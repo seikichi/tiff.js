@@ -29,7 +29,7 @@ xhr.send();
 
 ## Use it in your own project simply
 
-You just need to keep the `tiffThumbnails.js` file from this project, and the `tiff.js` files from tiff.js
+You just need to keep the `tiffThumbnails.js` and the `tiff.js` files from this project, 
 (let them both in the same directory as tiff.js will try to load the worker). In your html file, include the javascripts:
 ```html
 <script src="/path/to/tiff.js"></script>
