@@ -27,6 +27,20 @@ xhr.onload = function (e) {
 xhr.send();
 ```
 
+## Use it in your own project simply
+
+You just need to keep the `tiffThumbnails.js` file from this project, and the `tiff.js` files from tiff.js
+(let them both in the same directory as tiff.js will try to load the worker). In your html file, include the javascripts:
+```html
+<script src="/path/to/tiff.js"></script>
+<script src="/path/to/tiffThumbnails.js"></script>
+```
+To show a thumbnail, write an `img` element with a `data-tiff-thumbnail-file` attribute:
+```html
+<img data-tiff-thumbnail-file="/my/load.png">
+``` 
+
+
 ### Node.js
 
 ```sh
@@ -60,19 +74,6 @@ see tiff.d.ts
   - To be more precise, I use following functions only
   - TIFFOpen, TIFFClose, TIFFGetField, TIFFReadRGBAImage, TIFFSetDirectory, TIFFCurrentDirectory, TIFFReadDirectory
   
-## Use it in your own project simply
-
-You just need to keep the `tiffThumbnails.js` file from this project, and the `tiff.js` files from tiff.js
-(let them both in the same directory as tiff.js will try to load the worker). In your html file, include the javascripts:
-```html
-<script src="/path/to/tiff.js"></script>
-<script src="/path/to/tiffThumbnails.js"></script>
-```
-To show a thumbnail, write an `img` element with a `data-tiff-thumbnail-file` attribute:
-```html
-<img data-tiff-thumbnail-file="/my/load.png">
-``` 
-
 ## Alternatives
 
 - [photopea/UTIF.js](https://github.com/photopea/UTIF.js)
